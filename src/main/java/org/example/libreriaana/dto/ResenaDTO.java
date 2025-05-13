@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.libreriaana.validation.ValidationGroups;
 
 import java.time.LocalDateTime;
 
@@ -16,10 +17,10 @@ public class ResenaDTO {
     
     private Long id;
     
-    @NotNull(message = "El ID del usuario es obligatorio")
+    @NotNull(groups = {ValidationGroups.AdminValidation.class}, message = "El ID del usuario es obligatorio")
     private Long usuarioId;
     
-    @NotNull(message = "El ID del libro es obligatorio")
+    @NotNull(groups = {ValidationGroups.CreateValidation.class}, message = "El ID del libro es obligatorio")
     private Long libroId;
     
     @NotNull(message = "La puntuación es obligatoria")

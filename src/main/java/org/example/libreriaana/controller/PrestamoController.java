@@ -11,12 +11,14 @@ import org.example.libreriaana.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.example.libreriaana.validation.ValidationGroups.CreateValidation;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/prestamos")
+@RequestMapping("/prestamos")
 @AllArgsConstructor
 public class PrestamoController {
 
@@ -47,13 +49,15 @@ public class PrestamoController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<PrestamoDTO> crear(@Valid @RequestBody PrestamoDTO prestamoDTO) {
+    public ResponseEntity<PrestamoDTO> crear(@Validated(CreateValidation.class) @RequestBody PrestamoDTO prestamoDTO) {
         // Si el usuario no es admin, forzar el ID del usuario actual
+        // Si es admin, permitir que proporcione un ID de usuario, o usar el suyo propio
         Usuario usuarioActual = usuarioService.getUsuarioActual();
-        if (usuarioActual.getRol() != Usuario.Rol.ADMIN) {
+
+        if (usuarioActual.getRol() != Usuario.Rol.ADMIN || prestamoDTO.getUsuarioId() == null) {
             prestamoDTO.setUsuarioId(usuarioActual.getId());
         }
-        
+
         PrestamoDTO nuevoPrestamo = prestamoService.crear(prestamoDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoPrestamo);
     }

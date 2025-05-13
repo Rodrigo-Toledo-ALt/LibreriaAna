@@ -7,15 +7,17 @@ import org.example.libreriaana.dto.ResenaDTO;
 import org.example.libreriaana.model.Usuario;
 import org.example.libreriaana.service.ResenaService;
 import org.example.libreriaana.service.UsuarioService;
+import org.example.libreriaana.validation.ValidationGroups;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/resenas")
+@RequestMapping("/resenas")
 @AllArgsConstructor
 public class ResenaController {
 
@@ -36,10 +38,10 @@ public class ResenaController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<ResenaDTO> crear(@Valid @RequestBody ResenaDTO resenaDTO) {
+    public ResponseEntity<ResenaDTO> crear(@Validated(ValidationGroups.CreateValidation.class) @RequestBody ResenaDTO resenaDTO) {
         // Si el usuario no es admin, forzar el ID del usuario actual
         Usuario usuarioActual = usuarioService.getUsuarioActual();
-        if (usuarioActual.getRol() != Usuario.Rol.ADMIN) {
+        if (usuarioActual.getRol() != Usuario.Rol.ADMIN || resenaDTO.getUsuarioId() == null) {
             resenaDTO.setUsuarioId(usuarioActual.getId());
         }
         

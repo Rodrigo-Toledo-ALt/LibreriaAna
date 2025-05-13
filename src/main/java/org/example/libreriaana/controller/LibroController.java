@@ -7,15 +7,19 @@ import org.example.libreriaana.dto.LibroDTO;
 import org.example.libreriaana.dto.ResenaDTO;
 import org.example.libreriaana.service.LibroService;
 import org.example.libreriaana.service.ResenaService;
+import org.example.libreriaana.validation.ValidationGroups.UpdateValidation;
+import org.example.libreriaana.validation.ValidationGroups.CreateValidation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import  org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/libros")
+@RequestMapping("/libros")
 @AllArgsConstructor
 public class LibroController {
 
@@ -36,14 +40,15 @@ public class LibroController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<LibroDTO> crear(@Valid @RequestBody LibroDTO libroDTO) {
+    public ResponseEntity<LibroDTO> crear(@Validated(CreateValidation.class) @RequestBody LibroDTO libroDTO) {
         LibroDTO nuevoLibro = libroService.crear(libroDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoLibro);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<LibroDTO> actualizar(@PathVariable Long id, @Valid @RequestBody LibroDTO libroDTO) {
+    public ResponseEntity<LibroDTO> actualizar(@PathVariable Long id,
+                                               @Validated(UpdateValidation.class) @RequestBody LibroDTO libroDTO) {
         LibroDTO libroActualizado = libroService.actualizar(id, libroDTO);
         return ResponseEntity.ok(libroActualizado);
     }
