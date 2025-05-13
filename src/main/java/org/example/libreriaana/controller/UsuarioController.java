@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.libreriaana.dto.UsuarioDTO;
+import org.example.libreriaana.dto.UsuarioRegistroDTO;
 import org.example.libreriaana.model.Usuario;
 import org.example.libreriaana.service.UsuarioService;
 import org.springframework.http.HttpStatus;
@@ -35,8 +36,8 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> crear(@Valid @RequestBody UsuarioDTO usuarioDTO) {
-        UsuarioDTO nuevoUsuario = usuarioService.actualizar(null, usuarioDTO);
+    public ResponseEntity<UsuarioDTO> crear(@Valid @RequestBody UsuarioRegistroDTO registroDTO) {
+        UsuarioDTO nuevoUsuario = usuarioService.registrar(registroDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
     }
 

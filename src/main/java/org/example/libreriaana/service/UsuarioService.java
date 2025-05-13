@@ -52,6 +52,7 @@ public class UsuarioService {
         return usuarioMapper.toDTO(usuario);
     }
 
+
     @Transactional
     public UsuarioDTO actualizar(Long id, UsuarioDTO usuarioDTO) {
         // Obtener usuario existente
